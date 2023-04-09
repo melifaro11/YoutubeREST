@@ -19,9 +19,6 @@ app = Flask(__name__)
 app.secret_key = secrets.token_urlsafe(32)
 
 
-################################################################################
-# Handlers
-################################################################################
 def handle_exception():
     """
     Decorator that handles call exception and returns jsonifyed response
@@ -43,7 +40,11 @@ def handle_exception():
 
 @app.route('/streams')
 @handle_exception()
-def get_youtube_streams():
+def youtube_streams():
+    """
+    Endpoint returns list of an available video streams
+    for a given URL
+    """
     url = request.args.get('url', '', type=str)
     session['url'] = url
 
@@ -71,6 +72,9 @@ def get_youtube_streams():
 @app.route('/download/<itag>', methods=['GET'])
 @handle_exception()
 def download_file(itag):
+    """
+    Download a video stream as a file
+    """
     youtube = YouTube(session['url'])
     stream = youtube.streams.get_by_itag(int(itag))
 
