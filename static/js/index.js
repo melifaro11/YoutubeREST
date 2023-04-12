@@ -1,5 +1,5 @@
 const form = document.querySelector(".form");
-const cardWrapper = document.querySelector(".card-wrapper");
+const cardWrapper = document.querySelector(".card");
 const progress = document.querySelector(".progress");
 
 function byteToStr(bytes) {
