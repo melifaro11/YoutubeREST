@@ -4,17 +4,18 @@ import logging
 import secrets
 
 from flask import Flask
-from flask import session, request, jsonify
-from flask import after_this_request, send_file
+from flask import session, request, jsonify, redirect, url_for
+from flask import after_this_request, send_file, render_template
 
 from werkzeug.serving import run_simple
 from pytube import YouTube
 
+#print ('run')
 # Initialize logger
-logging.basicConfig(filename="youdown.log", level=logging.DEBUG)
+#logging.basicConfig(filename="youdown.log", level=logging.DEBUG)
 
 # Initialize flask app
-logging.info("Starting flask app...")
+#logging.info("Starting flask app...")
 app = Flask(__name__)
 app.secret_key = secrets.token_urlsafe(32)
 
@@ -38,21 +39,26 @@ def handle_exception():
     return inner
 
 
-@app.route('/streams')
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+
+@app.route('/streams', methods=['POST'])
 @handle_exception()
 def youtube_streams():
     """
     Endpoint returns list of an available video streams
     for a given URL
     """
-    url = request.args.get('url', '', type=str)
+    url = str(request.get_json())
     session['url'] = url
 
     youtube = YouTube(url)
 
-    results = []
+    streams = []
     for stream in youtube.streams:
-        results.append({
+        streams.append({
             'itag': stream.itag,
             'res': stream.resolution,
             'mime_type': stream.mime_type,
@@ -66,7 +72,11 @@ def youtube_streams():
             'type': stream.type
         })
 
-    return jsonify(results)
+    return jsonify({
+        'title': youtube.streams[0].title,
+        'thumbnail': youtube.thumbnail_url,
+        'streams': streams
+    })
 
 
 @app.route('/download/<itag>', methods=['GET'])
@@ -93,6 +103,23 @@ def download_file(itag):
         return response
 
     return send_file(file_handle, mimetype=stream.mime_type, as_attachment=True, download_name=stream.default_filename)
+
+################################################
+# Static directories
+################################################
+@app.route('/css/<path:filename>')
+def css_dir(filename):
+    return redirect(url_for('static', filename=f'css/{filename}'))
+
+
+@app.route('/js/<path:filename>')
+def js_dir(filename):
+    return redirect(url_for('static', filename=f'js/{filename}'))
+
+
+@app.route('/images/<path:filename>')
+def images_dir(filename):
+    return redirect(url_for('static', filename=f'images/{filename}'))
 
 
 if __name__ == '__main__':
