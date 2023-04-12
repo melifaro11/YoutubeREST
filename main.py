@@ -102,7 +102,8 @@ def download_file(itag):
 
         return response
 
-    return send_file(file_handle, mimetype=stream.mime_type, as_attachment=True, download_name=stream.default_filename)
+    #return send_file(file_handle, mimetype=stream.mime_type, as_attachment=True, download_name=stream.default_filename)
+    return send_file(file_handle, mimetype=stream.mime_type, as_attachment=True, attachment_filename=stream.default_filename)
 
 ################################################
 # Static directories
