@@ -51,3 +51,5 @@ The `/download/XXX` endpoint is a link for downloading a video stream, for which
 <a src="/download/2">Download stream #2</a>
 ...
 ```
+
+Repository was successfully forked!
