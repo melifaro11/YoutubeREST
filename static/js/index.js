@@ -1,7 +1,9 @@
 const form = document.querySelector(".form");
 const cardWrapper = document.querySelector(".card");
 const progress = document.querySelector(".progress");
+const main = document.querySelector("main");
 
+// Converts bytes to a human-readable string with appropriate units (bytes, KB, MB).
 function byteToStr(bytes) {
   if (bytes < 1024) {
     return bytes + " bytes";
@@ -30,6 +32,8 @@ form.addEventListener("submit", async (e) => {
     .then((data) => {
       if ("error" in data) {
         console.log("ERROR: " + data["error"]);
+        progress.style.display = "none";
+        showError();
       } else {
         data["streams"] = data["streams"].filter(({ progressive }) => progressive);
         createControls(data);
@@ -38,6 +42,13 @@ form.addEventListener("submit", async (e) => {
 
   e.target.url.value = "";
 });
+
+function showError() {
+  const errorMessage = document.createElement("p");
+  errorMessage.classList.add("error");
+  errorMessage.innerHTML = "Something went wrong";
+  main.append(errorMessage)
+}
 
 function createControls(data) {
   progress.style.display = "none";

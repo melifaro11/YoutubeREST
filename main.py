@@ -54,7 +54,7 @@ def youtube_streams():
     url = str(request.get_json())
     session['url'] = url
 
-    youtube = YouTube(url)
+    youtube = YouTube(url, use_oauth=True, allow_oauth_cache=True)
 
     streams = []
     for stream in youtube.streams:
