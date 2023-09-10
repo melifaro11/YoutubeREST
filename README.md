@@ -2,7 +2,7 @@
 
 `YouDown REST` is a small python's REST service for downloading a youtube videos. The service required python 3.7 or above. The service uses [pytube](https://pypi.org/project/pytube/) and [Flask](https://flask.palletsprojects.com/en/2.2.x/) python libraries.
 
-
+![](static/images/ytdownloader.gif)
 ## Dependency installation
 
 ```bash
@@ -52,4 +52,3 @@ The `/download/XXX` endpoint is a link for downloading a video stream, for which
 ...
 ```
 
-Repository was successfully forked!
